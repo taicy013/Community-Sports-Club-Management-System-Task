@@ -32,7 +32,7 @@ class member(person):
             else:
                 self.scores.append(int(user))
     def avg(self):
-        return round(sum(self.scores)/len(self.scores))
+        return "AVG SCORE: ", round(sum(self.scores)/len(self.scores))
     def get_details(self):
         super().get_details()
         print("MEMBER ID: ", self.p_id)
@@ -44,7 +44,7 @@ class coach(person):
         super().__init__(name,age,number,p_id)
         self.special = special
         self.pay = pay
-        self.mentees = {name:name.sport for name in mentees}
+        self.mentees = mentees
     
     def set_c_details(self):
         self.p_id = input("Enter your coach ID: ")
@@ -57,14 +57,21 @@ class coach(person):
             if user == 'q':
                 quit = 'q'
             else:
-                self.mentees[user.lower()] = user.sport
-                print(" Coach {self.name} is now mentoring {user.name} in {user.sport}")
+                sport = input("Enter member's sport: ")
+                self.mentees[user.lower()] = sport
+                print("Coach %s is now mentoring %s in %s" %(self.name,user,sport))
     def get_mentees(self):
-        print("------{self.name}'s MENTEES------")
+        print("------%s's MENTEES------" %(self.name))
         print(self.mentees)
     def increase_pay(self,p):
         self.pay *= 1 + (p/100)
-        return "{self.name}'s PAY HAS INCREASED TO {self.pay}"
+        return "%s's PAY HAS INCREASED TO %d" %(self.name,self.pay)
+    def get_details(self):
+        super().get_details()
+        print("COACH ID: ", self.p_id)
+        print("SPECIALISATION: ", self.special)
+        print("PAY: ", self.pay)
+        print("MENTEES: ", self.mentees)
 
 class staff(person):
     def __init__(self,name,age,number,p_id,pos,exp):
@@ -76,18 +83,37 @@ class staff(person):
         self.p_id = input("Enter your staff ID: ")
         self.pos = input("Enter your position: ")
         self.exp = int(input("Enter your years of service: "))
+    def years_increase(self):
+        self.exp += 1
+        return "%s's YEARS OF SERVICE HAS INCREASED TO %d" %(self.name,self.exp)
+    def assist(self,m):
+        return "STAFF %s ASSISSTED %s IN RESOLVING AN ISSUE" %(self.name,m.name)
     def get_details(self):
         super().get_details()
         print("STAFF ID: ", self.p_id)
         print("POSITION: ", self.pos)
         print("YEARS OF SERVICE: ", self.exp)
-    def years_increase(self):
-        self.exp += 1
-        return "{self.name}'s YEARS OF SERVICE HAS INCREASED TO {self.exp}"
 
-member1 = member("Taco",21,'072832849348','ieouoiwru')
-member2 = member("blue",22,'03483274823','heoiwuiurow')
+member1 = member("Taco",21,'072832849348','ieouoiwru',"football",[4,3,2,5,7])
+member2 = member("blue",22,'03483274823','heoiwuiurow','tennis',[5,4,7,12,3])
 
-coach1 = coach("krabb",34,'289798274982','ewoeirdsn')
+coach1 = coach("krabb",34,'289798274982','ewoeirdsn','tennis',150000,{member2.name:member2.sport})
+coach2 = coach("Sponge",25,'289798313212','esrewejkrh','football',160000,{member1.name:member1.sport})
+
+staff1 = staff("squid",54,'9304820374','lerherhow','receptionist',15)
+
+coach1.add_mentees()
+coach1.get_details()
+
+member2.add_scores()
+print(member2.avg())
+member2.get_details()
+
+print(staff1.assist(member1))
+print(staff1.years_increase())
+staff1.get_details()
+
+print(coach2.increase_pay(15))
+coach2.get_details()
 
     
